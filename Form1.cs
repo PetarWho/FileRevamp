@@ -20,7 +20,6 @@ namespace FileRevamp
             InitializeComponent();
         }
 
-
         private void openFolderToolStripMenuItem_Click(object sender, EventArgs e)
         {
             OpenFiles(folderBrowserDialog1);
@@ -35,7 +34,7 @@ namespace FileRevamp
         {
             if (fileList.SelectedItems == null)
             {
-                singleCheck.CheckState = CheckState.Unchecked;
+                revampSingleCheck.CheckState = CheckState.Unchecked;
                 return;
             }
 
@@ -44,11 +43,11 @@ namespace FileRevamp
                 nameBox.Text = fileList.SelectedItems[0].Text;
                 extensionBox.Text = fileList.SelectedItems[0].SubItems[1].Text
                     .Substring(fileList.SelectedItems[0].SubItems[1].Text.LastIndexOf('.'));
-                singleCheck.CheckState = CheckState.Checked;
+                revampSingleCheck.CheckState = CheckState.Checked;
             }
             catch (Exception)
             {
-                singleCheck.CheckState = CheckState.Unchecked;
+                revampSingleCheck.CheckState = CheckState.Unchecked;
                 nameBox.Text = String.Empty;
             }
         }
@@ -65,12 +64,19 @@ namespace FileRevamp
                 MessageBox.Show("No files found. Please, load some files!", "Empty list of files", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
-            else if (nameBox.Text.Trim() == "")
+            else if (nameBox.Text.Trim().Length == 0)
             {
                 MessageBox.Show("Name cannot be empty!", "Error!", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
-            else if (extensionBox.Text.Trim().Length <=1 || !extensionBox.Text.Trim().Contains('.'))
+            else if(nameBox.Text.Trim().IndexOfAny("?/\\*<>|\":".ToCharArray()) != -1)
+            {
+                MessageBox.Show("Illegal file name!", "Error!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+            else if (extensionBox.Text.Trim().Length <= 1 ||
+                !extensionBox.Text.Trim().Contains('.') ||
+                extensionBox.Text.Trim().IndexOfAny("?/\\*<>|\":".ToCharArray()) != -1)
             {
                 MessageBox.Show("Invalid extension format!", "Error!", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
@@ -81,11 +87,16 @@ namespace FileRevamp
             {
                 if (folderBrowserDialog1.ShowDialog() == DialogResult.OK)
                 {
-                    if (singleCheck.Checked)
+                    if (revampSingleCheck.Checked)
                     {
                         var n = fileList.SelectedItems[0].SubItems[0];
                         var p = fileList.SelectedItems[0].SubItems[1];
                         ExportFile(n.Text, p.Text);
+                        if (error)
+                        {
+                            error = false;
+                            return;
+                        }
                         MessageBox.Show("Successfully exported files!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
                         return;
                     }
@@ -151,7 +162,7 @@ namespace FileRevamp
             extensionBox.Text = String.Empty;
             deleteCheck.CheckState = CheckState.Unchecked;
             replaceIfExistsCheck.CheckState = CheckState.Unchecked;
-            singleCheck.CheckState = CheckState.Unchecked;
+            revampSingleCheck.CheckState = CheckState.Unchecked;
             extensionCheck.CheckState = CheckState.Unchecked;
         }
         void LoadToListView(Dictionary<string, string> dict)
@@ -233,9 +244,9 @@ namespace FileRevamp
 
         private void singleCheck_CheckedChanged(object sender, EventArgs e)
         {
-            if (singleCheck.CheckState == CheckState.Checked)
+            if (revampSingleCheck.CheckState == CheckState.Checked)
                 replaceBtn.Enabled = true;
-            else if (singleCheck.CheckState == CheckState.Unchecked)
+            else if (revampSingleCheck.CheckState == CheckState.Unchecked)
             {
                 if (this.fileList.SelectedIndices.Count > 0)
                     for (int i = 0; i < this.fileList.SelectedIndices.Count; i++)
@@ -267,6 +278,25 @@ namespace FileRevamp
 
         private void button1_Click(object sender, EventArgs e)
         {
+            if (fileNamesPaths.Count == 0)
+            {
+                MessageBox.Show("There are no items in the list", "Files not found", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
+            if (MessageBox.Show("Do you want to remove this item from the list?", "Remove item", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+            {
+                if (clearSingleCheck.Checked)
+                {
+                    while (fileList.SelectedItems.Count > 0)
+                    {
+                        fileList.Items.Remove(fileList.SelectedItems[0]);
+                    }
+                    return;
+                }
+            }
+
+
             if (MessageBox.Show("Do you want to clear the list?", "Clear List", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
             {
                 fileList.Items.Clear();

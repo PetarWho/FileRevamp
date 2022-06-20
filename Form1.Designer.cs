@@ -46,17 +46,19 @@
             this.insertBack = new System.Windows.Forms.RadioButton();
             this.revampBtn = new System.Windows.Forms.Button();
             this.panel1 = new System.Windows.Forms.Panel();
-            this.singleCheck = new System.Windows.Forms.CheckBox();
+            this.button1 = new System.Windows.Forms.Button();
+            this.extensionCheck = new System.Windows.Forms.CheckBox();
+            this.revampSingleCheck = new System.Windows.Forms.CheckBox();
+            this.label3 = new System.Windows.Forms.Label();
+            this.extensionBox = new System.Windows.Forms.TextBox();
             this.deleteCheck = new System.Windows.Forms.CheckBox();
             this.replaceIfExistsCheck = new System.Windows.Forms.CheckBox();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.folderBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
             this.panel2 = new System.Windows.Forms.Panel();
             this.label2 = new System.Windows.Forms.Label();
-            this.extensionBox = new System.Windows.Forms.TextBox();
-            this.label3 = new System.Windows.Forms.Label();
-            this.extensionCheck = new System.Windows.Forms.CheckBox();
-            this.button1 = new System.Windows.Forms.Button();
+            this.clearSingleCheck = new System.Windows.Forms.CheckBox();
+            this.button2 = new System.Windows.Forms.Button();
             this.topMenu.SuspendLayout();
             this.panel1.SuspendLayout();
             this.panel2.SuspendLayout();
@@ -74,7 +76,7 @@
             this.topMenu.Location = new System.Drawing.Point(0, 0);
             this.topMenu.Name = "topMenu";
             this.topMenu.Padding = new System.Windows.Forms.Padding(9, 2, 0, 2);
-            this.topMenu.Size = new System.Drawing.Size(1100, 29);
+            this.topMenu.Size = new System.Drawing.Size(1100, 30);
             this.topMenu.TabIndex = 0;
             this.topMenu.Text = "menuStrip1";
             // 
@@ -217,7 +219,7 @@
             this.revampBtn.Cursor = System.Windows.Forms.Cursors.Hand;
             this.revampBtn.Font = new System.Drawing.Font("Montserrat ExtraBold", 16.2F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Italic))), System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.revampBtn.ForeColor = System.Drawing.Color.Coral;
-            this.revampBtn.Location = new System.Drawing.Point(706, 43);
+            this.revampBtn.Location = new System.Drawing.Point(706, 37);
             this.revampBtn.Name = "revampBtn";
             this.revampBtn.Size = new System.Drawing.Size(247, 61);
             this.revampBtn.TabIndex = 5;
@@ -228,9 +230,10 @@
             // panel1
             // 
             this.panel1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.panel1.Controls.Add(this.clearSingleCheck);
             this.panel1.Controls.Add(this.button1);
             this.panel1.Controls.Add(this.extensionCheck);
-            this.panel1.Controls.Add(this.singleCheck);
+            this.panel1.Controls.Add(this.revampSingleCheck);
             this.panel1.Controls.Add(this.revampBtn);
             this.panel1.Controls.Add(this.insertBack);
             this.panel1.Controls.Add(this.insertFront);
@@ -244,16 +247,60 @@
             this.panel1.Size = new System.Drawing.Size(1119, 160);
             this.panel1.TabIndex = 6;
             // 
-            // singleCheck
+            // button1
             // 
-            this.singleCheck.AutoSize = true;
-            this.singleCheck.Location = new System.Drawing.Point(740, 113);
-            this.singleCheck.Name = "singleCheck";
-            this.singleCheck.Size = new System.Drawing.Size(175, 22);
-            this.singleCheck.TabIndex = 7;
-            this.singleCheck.Text = "Revamp only selected";
-            this.singleCheck.UseVisualStyleBackColor = true;
-            this.singleCheck.CheckedChanged += new System.EventHandler(this.singleCheck_CheckedChanged);
+            this.button1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.button1.Font = new System.Drawing.Font("Montserrat ExtraBold", 16.2F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Italic))), System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.button1.ForeColor = System.Drawing.Color.Coral;
+            this.button1.Location = new System.Drawing.Point(959, 36);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(150, 62);
+            this.button1.TabIndex = 9;
+            this.button1.Text = "Clear";
+            this.button1.UseVisualStyleBackColor = false;
+            this.button1.Click += new System.EventHandler(this.button1_Click);
+            // 
+            // extensionCheck
+            // 
+            this.extensionCheck.AutoSize = true;
+            this.extensionCheck.Location = new System.Drawing.Point(356, 113);
+            this.extensionCheck.Name = "extensionCheck";
+            this.extensionCheck.Size = new System.Drawing.Size(150, 22);
+            this.extensionCheck.TabIndex = 8;
+            this.extensionCheck.Text = "Change extension";
+            this.extensionCheck.UseVisualStyleBackColor = true;
+            this.extensionCheck.CheckedChanged += new System.EventHandler(this.extensionCheck_CheckedChanged);
+            // 
+            // revampSingleCheck
+            // 
+            this.revampSingleCheck.AutoSize = true;
+            this.revampSingleCheck.Location = new System.Drawing.Point(740, 113);
+            this.revampSingleCheck.Name = "revampSingleCheck";
+            this.revampSingleCheck.Size = new System.Drawing.Size(175, 22);
+            this.revampSingleCheck.TabIndex = 7;
+            this.revampSingleCheck.Text = "Revamp only selected";
+            this.revampSingleCheck.UseVisualStyleBackColor = true;
+            this.revampSingleCheck.CheckedChanged += new System.EventHandler(this.singleCheck_CheckedChanged);
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Font = new System.Drawing.Font("Montserrat Medium", 10.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.label3.Location = new System.Drawing.Point(371, 42);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(101, 25);
+            this.label3.TabIndex = 3;
+            this.label3.Text = "Extension";
+            // 
+            // extensionBox
+            // 
+            this.extensionBox.BackColor = System.Drawing.SystemColors.MenuBar;
+            this.extensionBox.Enabled = false;
+            this.extensionBox.Font = new System.Drawing.Font("Montserrat Medium", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.extensionBox.Location = new System.Drawing.Point(348, 70);
+            this.extensionBox.Name = "extensionBox";
+            this.extensionBox.Size = new System.Drawing.Size(142, 26);
+            this.extensionBox.TabIndex = 2;
             // 
             // deleteCheck
             // 
@@ -280,12 +327,13 @@
             // panel2
             // 
             this.panel2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.panel2.Controls.Add(this.button2);
             this.panel2.Controls.Add(this.label2);
             this.panel2.Controls.Add(this.replaceIfExistsCheck);
             this.panel2.Controls.Add(this.deleteCheck);
             this.panel2.Location = new System.Drawing.Point(811, 24);
             this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(288, 604);
+            this.panel2.Size = new System.Drawing.Size(299, 604);
             this.panel2.TabIndex = 7;
             // 
             // label2
@@ -298,49 +346,23 @@
             this.label2.TabIndex = 7;
             this.label2.Text = "Settings";
             // 
-            // extensionBox
+            // clearSingleCheck
             // 
-            this.extensionBox.BackColor = System.Drawing.SystemColors.MenuBar;
-            this.extensionBox.Enabled = false;
-            this.extensionBox.Font = new System.Drawing.Font("Montserrat Medium", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.extensionBox.Location = new System.Drawing.Point(348, 70);
-            this.extensionBox.Name = "extensionBox";
-            this.extensionBox.Size = new System.Drawing.Size(142, 26);
-            this.extensionBox.TabIndex = 2;
+            this.clearSingleCheck.Location = new System.Drawing.Point(988, 102);
+            this.clearSingleCheck.Name = "clearSingleCheck";
+            this.clearSingleCheck.Size = new System.Drawing.Size(98, 47);
+            this.clearSingleCheck.TabIndex = 10;
+            this.clearSingleCheck.Text = "Clear only selecteed";
+            this.clearSingleCheck.UseVisualStyleBackColor = true;
             // 
-            // label3
+            // button2
             // 
-            this.label3.AutoSize = true;
-            this.label3.Font = new System.Drawing.Font("Montserrat Medium", 10.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.label3.Location = new System.Drawing.Point(371, 42);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(101, 25);
-            this.label3.TabIndex = 3;
-            this.label3.Text = "Extension";
-            // 
-            // extensionCheck
-            // 
-            this.extensionCheck.AutoSize = true;
-            this.extensionCheck.Location = new System.Drawing.Point(356, 113);
-            this.extensionCheck.Name = "extensionCheck";
-            this.extensionCheck.Size = new System.Drawing.Size(150, 22);
-            this.extensionCheck.TabIndex = 8;
-            this.extensionCheck.Text = "Change extension";
-            this.extensionCheck.UseVisualStyleBackColor = true;
-            this.extensionCheck.CheckedChanged += new System.EventHandler(this.extensionCheck_CheckedChanged);
-            // 
-            // button1
-            // 
-            this.button1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.button1.Font = new System.Drawing.Font("Montserrat ExtraBold", 16.2F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Italic))), System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.button1.ForeColor = System.Drawing.Color.Coral;
-            this.button1.Location = new System.Drawing.Point(955, 42);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(150, 62);
-            this.button1.TabIndex = 9;
-            this.button1.Text = "Clear";
-            this.button1.UseVisualStyleBackColor = false;
-            this.button1.Click += new System.EventHandler(this.button1_Click);
+            this.button2.Location = new System.Drawing.Point(50, 172);
+            this.button2.Name = "button2";
+            this.button2.Size = new System.Drawing.Size(171, 50);
+            this.button2.TabIndex = 8;
+            this.button2.Text = "Change creation date";
+            this.button2.UseVisualStyleBackColor = true;
             // 
             // Form1
             // 
@@ -395,13 +417,15 @@
         private System.Windows.Forms.CheckBox replaceIfExistsCheck;
         private System.Windows.Forms.FolderBrowserDialog folderBrowserDialog1;
         private System.Windows.Forms.CheckBox deleteCheck;
-        private System.Windows.Forms.CheckBox singleCheck;
+        private System.Windows.Forms.CheckBox revampSingleCheck;
         private System.Windows.Forms.Panel panel2;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.TextBox extensionBox;
         private System.Windows.Forms.CheckBox extensionCheck;
         private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.CheckBox clearSingleCheck;
+        private System.Windows.Forms.Button button2;
     }
 }
 
