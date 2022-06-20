@@ -53,6 +53,10 @@
             this.folderBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
             this.panel2 = new System.Windows.Forms.Panel();
             this.label2 = new System.Windows.Forms.Label();
+            this.extensionBox = new System.Windows.Forms.TextBox();
+            this.label3 = new System.Windows.Forms.Label();
+            this.extensionCheck = new System.Windows.Forms.CheckBox();
+            this.button1 = new System.Windows.Forms.Button();
             this.topMenu.SuspendLayout();
             this.panel1.SuspendLayout();
             this.panel2.SuspendLayout();
@@ -156,27 +160,27 @@
             // 
             this.nameBox.BackColor = System.Drawing.SystemColors.MenuBar;
             this.nameBox.Font = new System.Drawing.Font("Montserrat Medium", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.nameBox.Location = new System.Drawing.Point(18, 78);
+            this.nameBox.Location = new System.Drawing.Point(35, 71);
             this.nameBox.Name = "nameBox";
-            this.nameBox.Size = new System.Drawing.Size(328, 26);
+            this.nameBox.Size = new System.Drawing.Size(307, 26);
             this.nameBox.TabIndex = 2;
             // 
             // label1
             // 
             this.label1.AutoSize = true;
             this.label1.Font = new System.Drawing.Font("Montserrat Medium", 10.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.label1.Location = new System.Drawing.Point(69, 37);
+            this.label1.Location = new System.Drawing.Point(139, 43);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(173, 25);
+            this.label1.Size = new System.Drawing.Size(105, 25);
             this.label1.TabIndex = 3;
-            this.label1.Text = "Change file name";
+            this.label1.Text = "File Name";
             // 
             // replaceBtn
             // 
             this.replaceBtn.AutoSize = true;
             this.replaceBtn.Enabled = false;
             this.replaceBtn.Font = new System.Drawing.Font("Montserrat Medium", 7.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.replaceBtn.Location = new System.Drawing.Point(390, 21);
+            this.replaceBtn.Location = new System.Drawing.Point(529, 21);
             this.replaceBtn.Name = "replaceBtn";
             this.replaceBtn.Size = new System.Drawing.Size(110, 22);
             this.replaceBtn.TabIndex = 4;
@@ -188,7 +192,7 @@
             this.insertFront.AutoSize = true;
             this.insertFront.Checked = true;
             this.insertFront.Font = new System.Drawing.Font("Montserrat Medium", 7.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.insertFront.Location = new System.Drawing.Point(390, 63);
+            this.insertFront.Location = new System.Drawing.Point(529, 63);
             this.insertFront.Name = "insertFront";
             this.insertFront.Size = new System.Drawing.Size(118, 22);
             this.insertFront.TabIndex = 4;
@@ -200,7 +204,7 @@
             // 
             this.insertBack.AutoSize = true;
             this.insertBack.Font = new System.Drawing.Font("Montserrat Medium", 7.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.insertBack.Location = new System.Drawing.Point(390, 102);
+            this.insertBack.Location = new System.Drawing.Point(529, 102);
             this.insertBack.Name = "insertBack";
             this.insertBack.Size = new System.Drawing.Size(118, 22);
             this.insertBack.TabIndex = 4;
@@ -213,7 +217,7 @@
             this.revampBtn.Cursor = System.Windows.Forms.Cursors.Hand;
             this.revampBtn.Font = new System.Drawing.Font("Montserrat ExtraBold", 16.2F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Italic))), System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.revampBtn.ForeColor = System.Drawing.Color.Coral;
-            this.revampBtn.Location = new System.Drawing.Point(567, 43);
+            this.revampBtn.Location = new System.Drawing.Point(706, 43);
             this.revampBtn.Name = "revampBtn";
             this.revampBtn.Size = new System.Drawing.Size(247, 61);
             this.revampBtn.TabIndex = 5;
@@ -224,11 +228,15 @@
             // panel1
             // 
             this.panel1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.panel1.Controls.Add(this.button1);
+            this.panel1.Controls.Add(this.extensionCheck);
             this.panel1.Controls.Add(this.singleCheck);
             this.panel1.Controls.Add(this.revampBtn);
             this.panel1.Controls.Add(this.insertBack);
             this.panel1.Controls.Add(this.insertFront);
             this.panel1.Controls.Add(this.replaceBtn);
+            this.panel1.Controls.Add(this.label3);
+            this.panel1.Controls.Add(this.extensionBox);
             this.panel1.Controls.Add(this.label1);
             this.panel1.Controls.Add(this.nameBox);
             this.panel1.Location = new System.Drawing.Point(-9, 482);
@@ -239,7 +247,7 @@
             // singleCheck
             // 
             this.singleCheck.AutoSize = true;
-            this.singleCheck.Location = new System.Drawing.Point(101, 113);
+            this.singleCheck.Location = new System.Drawing.Point(740, 113);
             this.singleCheck.Name = "singleCheck";
             this.singleCheck.Size = new System.Drawing.Size(175, 22);
             this.singleCheck.TabIndex = 7;
@@ -289,6 +297,50 @@
             this.label2.Size = new System.Drawing.Size(116, 32);
             this.label2.TabIndex = 7;
             this.label2.Text = "Settings";
+            // 
+            // extensionBox
+            // 
+            this.extensionBox.BackColor = System.Drawing.SystemColors.MenuBar;
+            this.extensionBox.Enabled = false;
+            this.extensionBox.Font = new System.Drawing.Font("Montserrat Medium", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.extensionBox.Location = new System.Drawing.Point(348, 70);
+            this.extensionBox.Name = "extensionBox";
+            this.extensionBox.Size = new System.Drawing.Size(142, 26);
+            this.extensionBox.TabIndex = 2;
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Font = new System.Drawing.Font("Montserrat Medium", 10.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.label3.Location = new System.Drawing.Point(371, 42);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(101, 25);
+            this.label3.TabIndex = 3;
+            this.label3.Text = "Extension";
+            // 
+            // extensionCheck
+            // 
+            this.extensionCheck.AutoSize = true;
+            this.extensionCheck.Location = new System.Drawing.Point(356, 113);
+            this.extensionCheck.Name = "extensionCheck";
+            this.extensionCheck.Size = new System.Drawing.Size(150, 22);
+            this.extensionCheck.TabIndex = 8;
+            this.extensionCheck.Text = "Change extension";
+            this.extensionCheck.UseVisualStyleBackColor = true;
+            this.extensionCheck.CheckedChanged += new System.EventHandler(this.extensionCheck_CheckedChanged);
+            // 
+            // button1
+            // 
+            this.button1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.button1.Font = new System.Drawing.Font("Montserrat ExtraBold", 16.2F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Italic))), System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.button1.ForeColor = System.Drawing.Color.Coral;
+            this.button1.Location = new System.Drawing.Point(955, 42);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(150, 62);
+            this.button1.TabIndex = 9;
+            this.button1.Text = "Clear";
+            this.button1.UseVisualStyleBackColor = false;
+            this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
             // Form1
             // 
@@ -346,6 +398,10 @@
         private System.Windows.Forms.CheckBox singleCheck;
         private System.Windows.Forms.Panel panel2;
         private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.TextBox extensionBox;
+        private System.Windows.Forms.CheckBox extensionCheck;
+        private System.Windows.Forms.Button button1;
     }
 }
 

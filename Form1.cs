@@ -9,78 +9,49 @@ namespace FileRevamp
 {
     public partial class Form1 : Form
     {
+        #region fields
+
+        bool error = false;
+        Dictionary<string, string> fileNamesPaths = new Dictionary<string, string>();
+
+        #endregion
         public Form1()
         {
             InitializeComponent();
         }
 
-        Dictionary<string, string> fileNamesPaths = new Dictionary<string, string>();
+
         private void openFolderToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            using (folderBrowserDialog1)
-            {
-                if (folderBrowserDialog1.ShowDialog() == DialogResult.OK)
-                {
-                    bool duplicate = false;
-                    foreach (var item in Directory.GetFiles(folderBrowserDialog1.SelectedPath).OrderBy(x => x))
-                    {
-                        string name = Path.GetFileNameWithoutExtension(item);
-                        if (fileNamesPaths.ContainsKey(name))
-                        {
-                            duplicate = true;
-                            continue;
-                        }
-                        fileNamesPaths.Add(name, item);
-                    }
-                    LoadToListView(fileNamesPaths);
-                    if (duplicate) MessageBox.Show("Some files were already included, so they got skipped.", "Duplicate files", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                }
-            }
+            OpenFiles(folderBrowserDialog1);
         }
 
         private void openToolStripMenuItem_Click(object sender, EventArgs e)
         {
-
-            using (openFileDialog1)
-            {
-                openFileDialog1.InitialDirectory = "Documents";
-                openFileDialog1.Filter = "All Files (*.*)|*.*";
-                openFileDialog1.RestoreDirectory = true;
-                openFileDialog1.Multiselect = true;
-                openFileDialog1.Title = "Open file";
-                openFileDialog1.FileName = "";
-
-                if (openFileDialog1.ShowDialog() == DialogResult.OK)
-                {
-                    bool duplicate = false;
-                    foreach (var file in openFileDialog1.FileNames)
-                    {
-                        string fileName = Path.GetFileNameWithoutExtension(file);
-                        if (fileNamesPaths.ContainsKey(fileName))
-                        {
-                            duplicate = true;
-                            continue;
-                        }
-                        fileNamesPaths.Add(fileName, file);
-                    }
-                    LoadToListView(fileNamesPaths);
-                    if (duplicate) MessageBox.Show("Some files were already included, so they got skipped.", "Duplicate files", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                }
-            }
+            OpenFiles(openFileDialog1);
         }
 
         private void fileList_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (fileList.SelectedItems == null) return;
+            if (fileList.SelectedItems == null)
+            {
+                singleCheck.CheckState = CheckState.Unchecked;
+                return;
+            }
 
             try
             {
                 nameBox.Text = fileList.SelectedItems[0].Text;
+                extensionBox.Text = fileList.SelectedItems[0].SubItems[1].Text
+                    .Substring(fileList.SelectedItems[0].SubItems[1].Text.LastIndexOf('.'));
+                singleCheck.CheckState = CheckState.Checked;
             }
-            catch (Exception) { }
+            catch (Exception)
+            {
+                singleCheck.CheckState = CheckState.Unchecked;
+                nameBox.Text = String.Empty;
+            }
         }
-
-        bool error = false;
 
         private void exitToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -97,6 +68,11 @@ namespace FileRevamp
             else if (nameBox.Text.Trim() == "")
             {
                 MessageBox.Show("Name cannot be empty!", "Error!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+            else if (extensionBox.Text.Trim().Length <=1 || !extensionBox.Text.Trim().Contains('.'))
+            {
+                MessageBox.Show("Invalid extension format!", "Error!", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
 
@@ -127,6 +103,57 @@ namespace FileRevamp
                 }
             }
         }
+
+        void OpenFiles(CommonDialog dialog)
+        {
+            if (!(dialog is FolderBrowserDialog || dialog is OpenFileDialog))
+            {
+                MessageBox.Show("Wrong file dialog", "Error", MessageBoxButtons.OK);
+                return;
+            }
+
+            if (dialog is OpenFileDialog)
+            {
+                (dialog as OpenFileDialog).InitialDirectory = "Documents";
+                (dialog as OpenFileDialog).Filter = "All Files (*.*)|*.*";
+                (dialog as OpenFileDialog).RestoreDirectory = true;
+                (dialog as OpenFileDialog).Multiselect = true;
+                (dialog as OpenFileDialog).Title = "Open file";
+                (dialog as OpenFileDialog).FileName = "";
+            }
+
+            using (dialog)
+            {
+                if (dialog.ShowDialog() == DialogResult.OK)
+                {
+                    bool duplicate = false;
+                    foreach (var item in (dialog is FolderBrowserDialog ? Directory.GetFiles(folderBrowserDialog1.SelectedPath) : openFileDialog1.FileNames).OrderBy(x => x))
+                    {
+                        string name = Path.GetFileNameWithoutExtension(item);
+                        if (fileNamesPaths.ContainsKey(name))
+                        {
+                            duplicate = true;
+                            continue;
+                        }
+                        fileNamesPaths.Add(name, item);
+                    }
+                    LoadToListView(fileNamesPaths);
+                    extensionBox.Text = fileList.Items[0].SubItems[1].Text
+                        .Substring(fileList.Items[0].SubItems[1].Text.LastIndexOf('.'));
+                    if (duplicate) MessageBox.Show("Some files were already included, so they got skipped.", "Duplicate files", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+            }
+        }
+
+        void ResetApp()
+        {
+            nameBox.Text = String.Empty;
+            extensionBox.Text = String.Empty;
+            deleteCheck.CheckState = CheckState.Unchecked;
+            replaceIfExistsCheck.CheckState = CheckState.Unchecked;
+            singleCheck.CheckState = CheckState.Unchecked;
+            extensionCheck.CheckState = CheckState.Unchecked;
+        }
         void LoadToListView(Dictionary<string, string> dict)
         {
             foreach (var file in dict)
@@ -143,7 +170,7 @@ namespace FileRevamp
             string newName = nameBox.Text;
 
             var folderPath = folderBrowserDialog1.SelectedPath;
-            string fileExtension = filePath.Substring(filePath.LastIndexOf('.'));
+            string fileExtension = extensionBox.Text.Trim();
 
             string temp = string.Empty;
             if (deleteCheck.Checked)
@@ -210,12 +237,41 @@ namespace FileRevamp
                 replaceBtn.Enabled = true;
             else if (singleCheck.CheckState == CheckState.Unchecked)
             {
+                if (this.fileList.SelectedIndices.Count > 0)
+                    for (int i = 0; i < this.fileList.SelectedIndices.Count; i++)
+                    {
+                        this.fileList.Items[this.fileList.SelectedIndices[i]].Selected = false;
+                    }
+
                 replaceBtn.Enabled = false;
+
                 if (replaceBtn.Checked)
                 {
                     replaceBtn.Checked = false;
                     insertFront.Checked = true;
                 }
+            }
+        }
+
+        private void extensionCheck_CheckedChanged(object sender, EventArgs e)
+        {
+            if (extensionCheck.CheckState == CheckState.Checked)
+            {
+                extensionBox.Enabled = true;
+            }
+            else
+            {
+                extensionBox.Enabled = false;
+            }
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            if (MessageBox.Show("Do you want to clear the list?", "Clear List", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+            {
+                fileList.Items.Clear();
+                fileNamesPaths.Clear();
+                ResetApp();
             }
         }
     }
