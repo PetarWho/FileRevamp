@@ -11,8 +11,9 @@ namespace FileRevamp
     {
         #region fields
 
+        List<MyFile> Files = new List<MyFile>();
         bool error = false;
-        Dictionary<string, string> fileNamesPaths = new Dictionary<string, string>();
+        //Dictionary<string, string> fileNamesPaths = new Dictionary<string, string>();
 
         #endregion
         public Form1()
@@ -35,19 +36,23 @@ namespace FileRevamp
             if (fileList.SelectedItems == null)
             {
                 revampSingleCheck.CheckState = CheckState.Unchecked;
+                clearSingleCheck.CheckState = CheckState.Unchecked;
                 return;
             }
 
             try
             {
-                nameBox.Text = fileList.SelectedItems[0].Text;
-                extensionBox.Text = fileList.SelectedItems[0].SubItems[1].Text
-                    .Substring(fileList.SelectedItems[0].SubItems[1].Text.LastIndexOf('.'));
+                MyFile currentFile = Files.Find(x=>x.Path == fileList.SelectedItems[0].SubItems[1].Text);
+                nameBox.Text = currentFile.Name;
+                extensionBox.Text = currentFile.Extension;
+                creationBox.Text = currentFile.CreationDate.ToString();
                 revampSingleCheck.CheckState = CheckState.Checked;
+                clearSingleCheck.CheckState = CheckState.Checked;
             }
             catch (Exception)
             {
                 revampSingleCheck.CheckState = CheckState.Unchecked;
+                clearSingleCheck.CheckState = CheckState.Unchecked;
                 nameBox.Text = String.Empty;
             }
         }
@@ -69,7 +74,7 @@ namespace FileRevamp
                 MessageBox.Show("Name cannot be empty!", "Error!", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
-            else if(nameBox.Text.Trim().IndexOfAny("?/\\*<>|\":".ToCharArray()) != -1)
+            else if (nameBox.Text.Trim().IndexOfAny("?/\\*<>|\":".ToCharArray()) != -1)
             {
                 MessageBox.Show("Illegal file name!", "Error!", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
@@ -101,9 +106,9 @@ namespace FileRevamp
                         return;
                     }
 
-                    foreach (var file in fileNamesPaths)
+                    foreach (var file in Files)
                     {
-                        ExportFile(file.Key, file.Value);
+                        ExportFile(file.Name, file.Path);
                         if (error)
                         {
                             error = false;
@@ -141,16 +146,19 @@ namespace FileRevamp
                     foreach (var item in (dialog is FolderBrowserDialog ? Directory.GetFiles(folderBrowserDialog1.SelectedPath) : openFileDialog1.FileNames).OrderBy(x => x))
                     {
                         string name = Path.GetFileNameWithoutExtension(item);
-                        if (fileNamesPaths.ContainsKey(name))
+                        string extension = item.Substring(item.LastIndexOf('.'));
+                        DateTime date = File.GetCreationTime(item);
+                        if (Files.FindIndex(x=>x.Path == item) != -1)
                         {
                             duplicate = true;
                             continue;
                         }
-                        fileNamesPaths.Add(name, item);
+                        Files.Add(new MyFile(name, item, extension, date));
                     }
-                    LoadToListView(fileNamesPaths);
-                    extensionBox.Text = fileList.Items[0].SubItems[1].Text
-                        .Substring(fileList.Items[0].SubItems[1].Text.LastIndexOf('.'));
+                    LoadToListView(Files);
+                    nameBox.Text = Files[0].Name;
+                    extensionBox.Text = Files[0].Extension;
+                    creationBox.Text = Files[0].CreationDate.ToString();
                     if (duplicate) MessageBox.Show("Some files were already included, so they got skipped.", "Duplicate files", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
             }
@@ -160,17 +168,18 @@ namespace FileRevamp
         {
             nameBox.Text = String.Empty;
             extensionBox.Text = String.Empty;
+            creationBox.Text = String.Empty;
             deleteCheck.CheckState = CheckState.Unchecked;
             replaceIfExistsCheck.CheckState = CheckState.Unchecked;
             revampSingleCheck.CheckState = CheckState.Unchecked;
-            extensionCheck.CheckState = CheckState.Unchecked;
         }
-        void LoadToListView(Dictionary<string, string> dict)
+        void LoadToListView(List<MyFile> listOfFiles)
         {
-            foreach (var file in dict)
+            foreach (var file in listOfFiles)
             {
-                ListViewItem item = new ListViewItem(file.Key);
-                item.SubItems.Add(file.Value);
+                ListViewItem item = new ListViewItem(file.Name);
+                item.SubItems.Add(file.Path);
+                item.SubItems.Add(file.CreationDate.ToString());
 
                 fileList.Items.Add(item);
             }
@@ -264,43 +273,31 @@ namespace FileRevamp
             }
         }
 
-        private void extensionCheck_CheckedChanged(object sender, EventArgs e)
-        {
-            if (extensionCheck.CheckState == CheckState.Checked)
-            {
-                extensionBox.Enabled = true;
-            }
-            else
-            {
-                extensionBox.Enabled = false;
-            }
-        }
-
         private void button1_Click(object sender, EventArgs e)
         {
-            if (fileNamesPaths.Count == 0)
+            if (Files.Count == 0)
             {
                 MessageBox.Show("There are no items in the list", "Files not found", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
 
-            if (MessageBox.Show("Do you want to remove this item from the list?", "Remove item", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+            if (clearSingleCheck.Checked)
             {
-                if (clearSingleCheck.Checked)
+                if (MessageBox.Show("Do you want to remove this item from the list?", "Remove item", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
                 {
                     while (fileList.SelectedItems.Count > 0)
                     {
                         fileList.Items.Remove(fileList.SelectedItems[0]);
                     }
-                    return;
                 }
+                return;
             }
 
 
             if (MessageBox.Show("Do you want to clear the list?", "Clear List", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
             {
                 fileList.Items.Clear();
-                fileNamesPaths.Clear();
+                Files.Clear();
                 ResetApp();
             }
         }
